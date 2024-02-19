@@ -10,3 +10,5 @@ During my studies at TUL, I have encountered many interesting subjects and tasks
     _Connecting to MongoDB through Typescript_
 * [Python Testing](Python%20Testing/)  
     _Unit, integration, etc. tests in Python_
+* [Server Management](Server%20Management/)  
+    _Learning to manage a Ubuntu server_
