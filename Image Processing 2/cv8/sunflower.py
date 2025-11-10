@@ -5,7 +5,7 @@ from skimage.feature import blob_log
 from scipy.stats import entropy
 
 
-THRESHOLD = 0.60
+THRESHOLD = 0.70
 
 def load_template(path, display=True):
     """
@@ -71,12 +71,15 @@ def process(image_path, gt_path, tmp_hist, name):
     draw_boxes(gt_im, boxes)
 
     # Find blobs
-    blobs = blob_log(255-image_gr, min_sigma=1, overlap=0.5) # Requires inversion
+    blobs = blob_log(255-image_gr, overlap=0.1) # Requires inversion
 
     # display_found(image_rgb, blobs)
 
     pred_boxes = []
     for blob in blobs:
+        # Remove small blobs
+        if blob[2]<5:
+            continue
         y = blob[0]
         x = blob[1]
         sigma = 4*blob[2]
@@ -89,6 +92,7 @@ def process(image_path, gt_path, tmp_hist, name):
 
         # Slicing the square
         square = image_hue[y1:y2, x1:x2]
+
         # Hist
         square_hist = cv.calcHist([square], [0], None, [180], [0,180])
         square_hist = square_hist / square_hist.sum()

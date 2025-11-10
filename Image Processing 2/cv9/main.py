@@ -41,18 +41,21 @@ def process_id(path,temp_gr ,template):
     test_bgr = cv.imread(path)
     test_gr = cv.cvtColor(test_bgr, cv.COLOR_BGR2GRAY)
 
-    # SIFT test
+    # SIFT test (find keypoints)
     sift = cv.SIFT.create()
     kp, des = sift.detectAndCompute(test_gr, None)
 
-    # Compare using 
-    bf = cv.BFMatcher()
-    matches = bf.knnMatch(temp_des, des, k=2)
+    # Match keypoints
+    FLANN_INDEX_KDTREE = 1
+    index_params = dict(algorithm = FLANN_INDEX_KDTREE, trees = 5)
+    search_params = dict(checks = 50) 
+    flann = cv.FlannBasedMatcher(index_params, search_params)
+    matches = flann.knnMatch(temp_des, des, k=2)
 
     # Uncertainty filter
     good_matches = []
     for m, n in matches:
-        if m.distance < 0.75 * n.distance:
+        if m.distance < 0.8 * n.distance:
             good_matches.append(m)
 
     if len(good_matches) < 10:
@@ -68,34 +71,35 @@ def process_id(path,temp_gr ,template):
 
     display_matches(temp_gr, temp_kp, test_gr, kp, matches_mask, good_matches)
 
+    # Find rectangle around id
     h,w = temp_gr.shape
-    pts = np.float32([ [0,0],[0,h-1],[w-1,h-1],[w-1,0] ]).reshape(-1,1,2)
-    dst = cv.perspectiveTransform(pts,M)
+    pts = np.float32([ [0,0],[0,h-1],[w-1,h-1],[w-1,0] ]).reshape(-1,1,2) # prepare rectangle via template
+    dst = cv.perspectiveTransform(pts,M) # Apply transformation to rectangle
 
 
-    # Recangle drawing
+    # Rectangle drawing
     detected = cv.polylines(test_gr.copy(), [np.int32(dst)], True, 255, 3, cv.LINE_AA)
 
     display_detected(detected)
 
-    # Cut and align
+    # Cut and align (apply transformation)
     aligned = cv.warpPerspective(test_gr, np.linalg.inv(M), (w, h))
 
     display_aligned(aligned)
 
+    # More contrast (hist. equalization)
+    clahe = cv.createCLAHE(clipLimit=3, tileGridSize=(4,4))
+    aligned = clahe.apply(aligned)
+
     # Cut parts
     photo_gr = aligned[66:202, 5:114]
-    name_gr = aligned[50:80, 70:150]
+    name_gr = aligned[50:70, 70:150]
     surname_gr = aligned[35:60, 70:150]
 
     display_parts(photo_gr, name_gr, surname_gr)
 
-    # More contrast for OCR
-    # _, name_bw = cv.threshold(name_gr, 0, 255, cv.THRESH_BINARY_INV)
-    # _, surname_bw = cv.threshold(surname_gr, 0, 255, cv.THRESH_BINARY_INV)
-
     # OCR
-    reader = easyocr.Reader(["cs", "en"])
+    reader = easyocr.Reader(["en"])
     name_results = reader.readtext(name_gr)
     surname_results = reader.readtext(surname_gr)
 
@@ -120,21 +124,18 @@ def display_matches(temp_gr, temp_kp, test_gr, test_kp, matches_mask, good):
     plt.figure("Matches")
     plt.title("Detected matches")
     plt.imshow(img3, 'gray')
-    # plt.show()
 
 def display_detected(detected):
     plt.figure("Detected")
     plt.title("Detected id")
     plt.imshow(detected, cmap="gray")
     plt.axis('off')
-    # plt.show()
 
 def display_aligned(aligned):
     plt.figure("Aligned")
     plt.title("Aligned id")
     plt.imshow(aligned, cmap='gray')
     plt.axis('off')
-    # plt.show()
 
 def display_parts(photo, name, surname):
     plt.figure("Parts")
@@ -150,18 +151,14 @@ def display_parts(photo, name, surname):
     plt.imshow(surname, cmap="gray")
     plt.title("Surname")
 
-    # plt.show()
-
 def display_read(aligned, name, surname):
     text1 = f"jmeno: '{name}'"
     text2 = f"prijmeni: '{surname}'"
     aligned = aligned.copy()
-    cv.putText(aligned, text1, (20,20), cv.FONT_HERSHEY_SIMPLEX,0.5, (255,0,0), 1)
-    cv.putText(aligned, text2, (20,40), cv.FONT_HERSHEY_SIMPLEX, 0.5, (255,0,0), 1)
-
     plt.figure("Read id")
+    plt.text(20, 20, text1, color="red")
+    plt.text(20, 40, text2, color="red")
     plt.imshow(aligned, cmap="gray")
-    # plt.show()
 
 if __name__ == "__main__":
     data_dir = os.path.join("data")
