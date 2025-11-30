@@ -25,7 +25,6 @@ def segment_video(path):
 
         if prev_frame is not None:
             corell = calculate_corell(prev_frame, frame)
-            # print(corell)
 
             if corell < THRESHOLD:
                 if frame_idx - segment_start >= MIN_SEGMENT_LENGTH:
