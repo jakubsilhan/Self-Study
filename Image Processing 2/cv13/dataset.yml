@@ -1,0 +1,5 @@
+path: prepared_data
+train: images
+val: images
+names:
+  0: strawberry
