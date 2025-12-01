@@ -1,6 +1,5 @@
 import os, torch
-import torch.nn as nn
-from torchvision import models
+import timm
 from main import prepare_dataloaders, visualize_model
 
 MODEL_DIR = os.path.join("models")
@@ -18,10 +17,12 @@ if __name__ == "__main__":
     dataloaders, dataset_sizes, class_names = prepare_dataloaders(DATA_DIR)
 
     # Load model
-    model = models.resnet18(weights='IMAGENET1K_V1')
-    num_ftrs = model.fc.in_features
-    model.fc = nn.Linear(num_ftrs, 2)
-    model = model.to(device)
+    model = timm.create_model(
+        "resnet10t",
+        pretrained=True,
+        num_classes = 2
+    )
+    model.to(device)
     model.load_state_dict(torch.load(model_path, weights_only=True))
 
     # Visualize
