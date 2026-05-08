@@ -2,13 +2,13 @@
 During my studies at TUL, I have encountered many interesting subjects and tasks. This repo is the collection of such tasks and more, where I can learn more or come back to remember how I did things before.
 
 # Contents
-* [Docker Backend](/Docker%20Backend/)  
-    _Hosting backend through a docker container_
-* [Typescript Intro](Typescript%20Intro/)  
-    _Learning typescript through simple tasks_
-* [Mongo Typescript](Mongo%20Typescript/)  
-    _Connecting to MongoDB through Typescript_
-* [Python Testing](Python%20Testing/)  
-    _Unit, integration, etc. tests in Python_
-* [Server Management](Server%20Management/)  
-    _Learning to manage a Ubuntu server_
+* [Compile](/Compiler/)  
+    _Creation of the grammar and other tools for a functional language_
+* [Functional Programming](Functional%20Programming/)  
+    _Solving tasks using a functional language_
+* [Image Processing 1](Image%20Processing%201/)  
+    _Image processing tasks solved using python_
+* [Image Processing 2](Image%20Processing%202/)  
+    _More complex image processing tasks solved using python_
+* [Personal Page](Personal%20Page/)  
+    _Creation of mostly pure HTML and CSS personal webpage_

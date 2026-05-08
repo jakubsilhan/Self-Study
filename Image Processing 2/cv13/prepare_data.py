@@ -20,7 +20,7 @@ def prepare():
     if not os.path.exists(labels_dir):
         prepare_labels(labels_dir)
 
-    # Dataset file?
+    # Dataset file
     prepare_dataset_file()
 
 def prepare_images(images_dir):

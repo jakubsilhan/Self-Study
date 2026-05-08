@@ -43,8 +43,8 @@ def prepare_dataloaders(data_dir):
     # Prepare data
     image_datasets = {x: datasets.ImageFolder(os.path.join(data_dir, x), transform=data_transforms[x])
                     for x in ['train', 'valid']}
-    dataloaders = {x: torch.utils.data.DataLoader(image_datasets[x], batch_size=32,
-                                                shuffle=True, num_workers=4)
+    dataloaders = {x: torch.utils.data.DataLoader(image_datasets[x], batch_size=128,
+                                                shuffle=True, num_workers=4, persistent_workers=True, prefetch_factor=2)
                 for x in ['train', 'valid']}
     dataset_sizes = {x: len(image_datasets[x]) for x in ['train', 'valid']}
     class_names = image_datasets['train'].classes
@@ -170,52 +170,6 @@ def train_model(dataloaders, model, criterion, optimizer, scheduler, dataset_siz
 
     return model
 
-
-def visualize_model(dataloaders, model, class_names, num_images=6):
-    """Validate model and visualize with N images"""
-    was_training = model.training
-    model.eval()
-    images_so_far = 0
-    fig = plt.figure()
-
-    with torch.no_grad():
-        for i, (inputs, labels) in enumerate(dataloaders['valid']):
-            inputs = inputs.to(device)
-            labels = labels.to(device)
-
-            # Forward pass
-            outputs = model(inputs)
-            _, preds = torch.max(outputs, 1)
-
-            # Go through images and display
-            for j in range(inputs.size()[0]):
-                images_so_far += 1
-                ax = plt.subplot(num_images//2, 2, images_so_far)
-                ax.axis('off')
-                ax.set_title(f'predicted: {class_names[preds[j]]}')
-                imshow(inputs.cpu().data[j])
-
-                if images_so_far == num_images:
-                    model.train(mode=was_training)
-                    return
-        model.train(mode=was_training)
-
-# Utils
-def imshow(inp, title=None):
-    """Display image for Tensor."""
-    # Restructure and unnormalize
-    inp = inp.numpy().transpose((1, 2, 0))
-    mean = np.array([0.485, 0.456, 0.406])
-    std = np.array([0.229, 0.224, 0.225])
-    inp = std * inp + mean
-    inp = np.clip(inp, 0, 1)
-
-    # Display
-    plt.imshow(inp)
-    if title is not None:
-        plt.title(title)
-    plt.pause(0.001)
-
 if __name__ == "__main__":
     # Device agnostic
     device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -239,6 +193,3 @@ if __name__ == "__main__":
 
     # Train model
     model_ft = train_model(dataloaders, model_ft, criterion, optimizer_ft, exp_lr_scheduler, dataset_sizes, num_epochs=EPOCHS)
-
-    # Visualize model
-    visualize_model(dataloaders, model_ft, class_names)

@@ -1,0 +1,151 @@
+/* Main style */
+
+:root {
+    --main-color:rgb(72, 148, 42);
+    --main-active-color:rgb(101, 173, 73);
+    --bg-color: rgb(31, 31, 31);
+    --theme-color: rgb(223, 223, 223);
+    --theme-text: rgb(31, 31, 31);
+    --txt-color: rgb(255,255,255);
+    height: 100%;
+}
+
+:root.light {
+    --bg-color: rgb(240, 240, 240);
+    --theme-color: rgb(31, 31, 31);
+    --theme-text: rgb(223, 223, 223);
+    --txt-color: rgb(31,31,31);
+}
+
+body {
+  height: 100%;
+  margin: 0;
+  background-color: var(--bg-color);
+}
+
+.container {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+}
+
+.triangle {
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  clip-path: polygon(0 0, 15% 0, 25% 100%, 0% 100%);
+  background-color: var(--main-color);
+}
+
+main {
+  height: 100%;
+  width: 80%;
+}
+
+nav {
+  height: 100%;
+  width: 20%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+}
+
+nav button {
+  background-color: var(--main-color);
+  color: var(--txt-color);
+  border: none;
+  border-radius: 25px;
+  padding: 10px;
+  height: 50px;
+  width: 50px;
+  margin-right: 10px;
+  margin-left: auto;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: width 0.3s ease, border-radius 0.3s ease;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+nav button:hover {
+  width: 150px;
+}
+
+nav button:active {
+  background-color: var(--main-active-color);
+}
+
+nav button > div:first-child {
+  width: 0;
+  overflow: hidden;
+  transition: width 0.3s ease;
+}
+
+nav button:hover > div:first-child {
+  width: 100px;
+}
+
+.theme-button {
+  position: absolute;
+  border-radius: 100%;
+  border: none;
+  text-align: center;
+  align-content: center;
+  top: 20px;
+  right: 20px;
+  background-color: var(--theme-color);
+  color: var(--theme-text);
+  width: 30px;
+  height: 30px;  
+}
+
+.theme-button:hover {
+  height: 50px;
+  width: 50px;
+  top: 10px;
+  right: 10px;
+  transition: width 0.3s ease, height 0.3s ease, top 0.3s ease, right 0.3s ease;
+}
+
+#home-main {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 35%;
+  padding-left: 10%;
+}
+
+#home-main img {
+  height: 60%;
+  border-radius: 50%;
+  background-color: var(--bg-color);
+}
+
+#home-main div {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  color: var(--txt-color);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: xx-large;
+  font-weight: bold;
+}
+
+#home-main div p {
+  margin: 0px;
+}
+
+#home-main div p:nth-child(2) {
+  font-size: large;
+  text-align: right;
+}
+
+#home-main div p span {
+  color: var(--main-color);
+}

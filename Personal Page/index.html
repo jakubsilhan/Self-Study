@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Jakub Šilhán</title>
+    <script>
+      if(localStorage.getItem === null) localStorage.setItem("light-theme", "false")
+    </script>
+    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="icon" href="./favicon.ico" type="image/x-icon">
+  </head>
+  <body>
+    <div class="theme-button fa" id="theme-btn"></div>
+    <div class="triangle"></div>
+    <div class="container">
+        <main id="home-main">
+            <img src="images/portrait.png" alt="Portrait">
+            <div>
+                <p>I am <span>Jakub Šilhán</span></p>
+                <p>A Software Engineer</p>
+            </div>
+        </main>
+        <!-- Theme switch here -->
+        <nav>
+            <button onclick="location.href='index.html'">
+                <div>Home</div>
+                <div class="fa fa-home"></div>
+            </button>
+            <button onclick="location.href='about.html'">
+                <div>About</div>
+                <div class="fa fa-user"></div>
+            </button>
+            <button onclick="location.href='projects.html'">
+                <div>Projects</div>
+                <div class="fa fa-briefcase"></div>
+            </button>
+            <button onclick="location.href='contact.html'">
+                <div>Contact</div>
+                <div class="fa fa-envelope"></div>
+            </button>
+        </nav>
+    </div>
+    <script>
+        const btn = document.getElementById("theme-btn");
+        const root = document.documentElement;
+
+        function switchTheme(isLight){
+            if (isLight) {
+                root.classList.add("light");
+                btn.classList.remove("fa-sun-o");
+                btn.classList.add("fa-moon-o");
+            }else {
+                root.classList.remove("light");
+                btn.classList.remove("fa-moon-o");
+                btn.classList.add("fa-sun-o");
+            }
+        }
+
+        btn.addEventListener("click", () => {
+            isLight = !JSON.parse(localStorage.getItem("light-theme"));
+            switchTheme(isLight);
+            localStorage.setItem("light-theme", JSON.stringify(isLight));
+        })
+
+        switchTheme(JSON.parse(localStorage.getItem("light-theme")))
+    </script>
+  </body>
+</html>
