@@ -42,12 +42,12 @@ body {
 
 main {
   height: 100%;
-  width: 90%;
+  width: 80%;
 }
 
 nav {
   height: 100%;
-  width: 10%;
+  width: 20%;
   display: flex;
   flex-direction: column;
   justify-content: center;
