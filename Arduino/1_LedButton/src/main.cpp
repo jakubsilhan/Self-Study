@@ -1,20 +1,22 @@
 #include <Arduino.h>
+#include "DebouncedButton.hpp"
 
-int led = 4;
-int button = 2;
+// Pins
+const int LED_PIN = 4;
+const int BUTTON_PIN = 2;
+
+DebouncedButton button(BUTTON_PIN);
+
 
 void setup() {
-  pinMode(led, OUTPUT);
-  pinMode(button, INPUT);
+  pinMode(LED_PIN, OUTPUT);
+  button.begin(INPUT);
 }
 
 void loop() {
-  if (digitalRead(button)==HIGH)
-  {
-    digitalWrite(led, HIGH);
+
+  if(button.wasPressed()){
+    digitalWrite(LED_PIN, !digitalRead(LED_PIN));
   }
-  else
-  {
-    digitalWrite(led, LOW);
-  }
+  
 }
