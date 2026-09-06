@@ -1,22 +1,19 @@
 #include <Arduino.h>
-#include "DebouncedButton.hpp"
+#include "tasks/SemaphoreControl.cpp"
 
 // Pins
-const int LED_PIN = 4;
-const int BUTTON_PIN = 2;
+const int RED_PIN = 4;
+const int ORANGE_PIN = 7;
+const int GREEN_PIN = 8;
 
-DebouncedButton button(BUTTON_PIN);
+SemaphoreControl semaphoreControl(RED_PIN, ORANGE_PIN, GREEN_PIN);
+
 
 
 void setup() {
-  pinMode(LED_PIN, OUTPUT);
-  button.begin(INPUT);
+  semaphoreControl.setup();
 }
 
 void loop() {
-
-  if(button.wasPressed()){
-    digitalWrite(LED_PIN, !digitalRead(LED_PIN));
-  }
-  
+  semaphoreControl.loop();
 }
